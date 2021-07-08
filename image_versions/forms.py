@@ -49,7 +49,7 @@ class FocusPointForm(forms.ModelForm):
         model = FocusPoint
         fields = ["path", "x", "y"]
 
-    def save(self, commit=False):
+    def save(self, commit=True):
         instance = super().save(commit=commit)
 
         from imagekit.cachefiles import ImageCacheFile
