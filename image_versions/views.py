@@ -1,13 +1,21 @@
 import json
 import base64
 
-from django.http import HttpResponse
+from django.http import (
+    HttpResponse,
+    JsonResponse,
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+)
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse, HttpResponseForbidden
+from django.utils.translation import ugettext_lazy as _
+from django.core.files.storage import default_storage
+from django.shortcuts import render
 
 from .models import FocusPoint
 from .forms import FocusPointForm, VersionForm
+from .utils import create_token
 
 
 PIXEL_GIF_DATA = base64.b64decode(
@@ -59,3 +67,52 @@ def focus_point_details(request):
     if errors:
         data["errors"] = errors
     return JsonResponse(data)
+
+
+def set_focus_point(request):
+    """
+    Allows to set a focus point for an image.
+
+    This view has no information about the object which has the image attached.
+    But a per-user unique link to this view will be formed in a template of the
+    previous page only if the current user has a permission to edit the object.
+
+    Required GET params:
+    * orig_path - full path of the original image within filebrowser's MEDIA_ROOT
+    * token - encrypted string ensuring that current user can modify this file
+
+    Optional GET params:
+    * goto_next - path where to go after setting the focus point
+
+    """
+
+    # QUERY / PATH CHECK
+    orig_path = request.GET.get("orig_path", "")
+    token = request.GET.get("token", "")
+    goto_next = request.GET.get("goto_next", "/")
+
+    if not orig_path:
+        return HttpResponseBadRequest(
+            _("Sorry. We can't show the page. Path is not defined.")
+        )
+
+    if not default_storage.exists(orig_path):
+        return HttpResponseBadRequest(
+            _("Sorry. We can't show the page. Path is not correct.")
+        )
+
+    if not token:
+        return HttpResponseBadRequest(
+            _("Sorry. We can't show the page. Token is not defined.")
+        )
+
+    if token != create_token(request.user.username, orig_path):
+        return HttpResponseForbidden(
+            _("Sorry. You are not allowed to access this page. Token is incorrect.")
+        )
+
+    context = {
+        "path": orig_path,
+        "goto_next": goto_next,
+    }
+    return render(request, "image_versions/set_focus_point.html", context)

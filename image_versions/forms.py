@@ -2,15 +2,20 @@ from django import forms
 from django.core.files.storage import default_storage
 from django.utils.translation import gettext
 
-from .models import FocusPoint
-from .imagegenerators import VERSIONS
+from imagekit.registry import generator_registry
 
-VERSION_CHOICES = [(key, key) for key in VERSIONS.keys()]
+from .models import FocusPoint
 
 
 class VersionForm(forms.Form):
     image_path = forms.CharField(required=True)
-    version = forms.ChoiceField(required=True, choices=VERSION_CHOICES)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        version_choices = [(id, id) for id in generator_registry.get_ids()]
+
+        self.fields["version"] = forms.ChoiceField(required=True, choices=version_choices)
 
     def clean_image_path(self):
         image_path = self.cleaned_data["image_path"]
@@ -25,7 +30,7 @@ class VersionForm(forms.Form):
         return image_path
 
     def get_generator_class(self):
-        return VERSIONS[self.cleaned_data["version"]]
+        return generator_registry.get(self.cleaned_data["version"])
 
     def generate(self):
         from imagekit.cachefiles import ImageCacheFile
@@ -43,3 +48,21 @@ class FocusPointForm(forms.ModelForm):
     class Meta:
         model = FocusPoint
         fields = ["path", "x", "y"]
+
+    def save(self, commit=False):
+        instance = super().save(commit=commit)
+
+        from imagekit.cachefiles import ImageCacheFile
+
+        image_path = instance.path
+        with default_storage.open(image_path) as source_file:
+            for id in generator_registry.get_ids():
+                image_generator = generator_registry.get(id, source=source_file)
+                cached = ImageCacheFile(image_generator)
+                if cached.cachefile_backend.exists(cached):
+                    # Regenerate existing versions
+                    cached.generate(force=True)
+
+        return instance
+
+

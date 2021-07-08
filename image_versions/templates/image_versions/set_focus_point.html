@@ -1,0 +1,7 @@
+{% extends base_template|default:"image_versions/base.html" %}
+{% load static i18n %}
+
+{% block content %}
+  {% include "image_versions/focus_point.html" %}
+  <p><a href="{{ goto_next }}">{% trans "Go back" %}</a></p>
+{% endblock %}

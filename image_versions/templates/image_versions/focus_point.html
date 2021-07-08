@@ -1,7 +1,7 @@
 {% load static i18n %}
 
 <div style="width:610px;">
-  <div id="image_preview" class="helper-tool-target" data-path="{{ path }}">
+  <div id="image_preview" class="helper-tool-target" data-path="{{ path }}" data-focus-point-details-url="{% url 'image_versions:focus_point_details' %}">
     <img class="helper-tool-img img-fluid" alt="" />
     <img class="reticle" src="{% static 'image_versions/img/focuspoint-target.png' %}" alt="" />
     <img class="target-overlay img-fluid" alt="" />
@@ -18,4 +18,4 @@
 </script>
 <script src="{% static 'image_versions/vendor/tracking.js-1.1.3/build/tracking-min.js' %}"></script>
 <script src="{% static 'image_versions/vendor/tracking.js-1.1.3/build/data/face-min.js' %}"></script>
-<script src="{% static 'image_versions/js/admin_image_focus_point.js' %}"></script>
+<script src="{% static 'image_versions/js/set_image_focus_point.js' %}"></script>

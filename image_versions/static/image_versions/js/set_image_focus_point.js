@@ -1,9 +1,10 @@
-django.jQuery(function($) {
+(window.jQuery || window.django.jQuery)(document).ready(function($) {
   /*
   * Focus point implementation is based on https://github.com/jonom/jquery-focuspoint
   * */
   var $helperToolImage;
   var faceSelector = 0;
+  var detailsUrl;
 
   //This stores focusPoint's data-attribute values
   var focusPointAttr = {
@@ -21,12 +22,14 @@ django.jQuery(function($) {
     $helperToolImage = $('img.helper-tool-img, img.target-overlay');
 
     var $imagePreview = $('#image_preview');
+    detailsUrl = $imagePreview.data('focus-point-details-url');
+
     focusPointAttr.path = $imagePreview.data('path');
 
     if (focusPointAttr.path) {
       var imageURL = window.settings.MEDIA_URL + focusPointAttr.path;
 
-      $.get('/focus-point/?path=' + focusPointAttr.path, function(data) {
+      $.get(detailsUrl + '?path=' + focusPointAttr.path, function(data) {
           focusPointAttr.x = parseFloat(data.result.x);
           focusPointAttr.y = parseFloat(data.result.y);
           //Set the default source image
@@ -105,7 +108,7 @@ django.jQuery(function($) {
   });
 
   function updateFocusPoint() {
-    $.post('/focus-point/', {
+    $.post(detailsUrl, {
       'path': focusPointAttr.path,
       'x': focusPointAttr.x,
       'y': focusPointAttr.y
