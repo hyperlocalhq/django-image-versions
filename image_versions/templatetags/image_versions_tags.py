@@ -83,3 +83,19 @@ def to_django_file(path_or_file_object):
         else path_or_file_object.name
     )
     return django_file
+
+
+@register.filter
+def image_version_url(path_or_file_object, generator_id):
+    """
+    Creates an image version and returns its URL if the original file exists.
+    """
+    from imagekit.registry import generator_registry
+    from imagekit.cachefiles import ImageCacheFile
+
+    if original_image_exists(path_or_file_object):
+        django_file = to_django_file(path_or_file_object)
+        generator = generator_registry.get(generator_id, source=django_file)
+        image_version = ImageCacheFile(generator)
+        return image_version.url
+    return ""
