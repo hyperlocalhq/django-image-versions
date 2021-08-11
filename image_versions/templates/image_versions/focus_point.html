@@ -1,14 +1,16 @@
 {% load static i18n %}
 
-<div style="width:610px;">
+<div style="width:610px; margin: 0 auto;">
   <div id="image_preview" class="helper-tool-target" data-path="{{ path }}" data-focus-point-details-url="{% url 'image_versions:focus_point_details' %}">
     <img class="helper-tool-img img-fluid" alt="" />
     <img class="reticle" src="{% static 'image_versions/img/focuspoint-target.png' %}" alt="" />
     <img class="target-overlay img-fluid" alt="" />
   </div>
+  <p class="center">
+    <button type="button" class="btn btn-sm btn-secondary d-none" id="focus_face">{% trans "Focus a face" %}</button>
+    <button type="button" class="btn btn-sm btn-secondary d-none" id="reset_focus_point">{% trans "Reset focus point" %}</button>
+  </p>
 </div>
-<button type="button" class="btn btn-sm btn-secondary d-none" id="focus_face">{% trans "Focus a face" %}</button>
-<button type="button" class="btn btn-sm btn-secondary d-none" id="reset_focus_point">{% trans "Reset focus point" %}</button>
 
 <link rel="stylesheet" href="{% static 'image_versions/css/focus_point.css' %}"/>
 <script>

@@ -1,0 +1,83 @@
+# Translations of django-image-versions.
+# Copyright (C) 2021 Hyperlocal HQ
+# This file is distributed under the same license as the django-image-versions package.
+# Aidas Bendoraitis <bendoraitis@hyperlocalhq.com>, 2021.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-08-10 23:37+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: image_versions/apps.py:7
+msgid "Image versions"
+msgstr "Bildversionen"
+
+#: image_versions/forms.py:23
+msgid "Invalid image path"
+msgstr "Ungültiger Pfad zum Bild"
+
+#: image_versions/forms.py:25
+msgid "Image does not exist"
+msgstr "Bild existiert nicht"
+
+#: image_versions/forms.py:28
+msgid "Original image is too big. It should be less than 10 MB."
+msgstr "Das Originalbild ist zu groß. Es sollte weniger als 10 MB groß sein."
+
+#: image_versions/models.py:43
+msgid "Image path inside the media directory"
+msgstr "Bildpfad innerhalb des Medienverzeichnisses"
+
+#: image_versions/models.py:60
+msgid "Width"
+msgstr "Breite"
+
+#: image_versions/models.py:62
+msgid "Height"
+msgstr "Höhe"
+
+#: image_versions/models.py:68
+#: image_versions/templates/image_versions/base.html:12
+msgid "Focus Point"
+msgstr "Fokus-Punkt"
+
+#: image_versions/models.py:69
+msgid "Focus Points"
+msgstr "Fokus-Punkte"
+
+#: image_versions/templates/image_versions/focus_point.html:10
+msgid "Focus a face"
+msgstr "Ein Gesicht fokussieren"
+
+#: image_versions/templates/image_versions/focus_point.html:11
+msgid "Reset focus point"
+msgstr "Fokus-Punkt zurücksetzen"
+
+#: image_versions/templates/image_versions/set_focus_point.html:6
+msgid "Go back"
+msgstr "Zurück"
+
+#: image_versions/views.py:96
+msgid "Sorry. We can't show the page. Path is not defined."
+msgstr "Entschuldigung. Wir können die Seite nicht anzeigen. Der Pfad ist nicht definiert."
+
+#: image_versions/views.py:101
+msgid "Sorry. We can't show the page. Path is not correct."
+msgstr "Entschuldigung. Wir können die Seite nicht anzeigen. Der Pfad ist nicht korrekt."
+
+#: image_versions/views.py:106
+msgid "Sorry. We can't show the page. Token is not defined."
+msgstr "Entschuldigung. Wir können die Seite nicht anzeigen. Token ist nicht definiert."
+
+#: image_versions/views.py:111
+msgid "Sorry. You are not allowed to access this page. Token is incorrect."
+msgstr "Entschuldigung. Sie sind nicht berechtigt, auf diese Seite zuzugreifen. Der Token ist falsch."
