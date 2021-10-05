@@ -1,7 +1,7 @@
 {% load static i18n %}
 
 <div style="width:610px; margin: 0 auto;">
-  <div id="image_preview" class="helper-tool-target" data-path="{{ path }}" data-focus-point-details-url="{% url 'image_versions:focus_point_details' %}">
+  <div id="image_preview" class="helper-tool-target" data-path="{{ path }}" data-focus-point-details-url="{% url 'image_versions:focus_point_details' %}" data-token="{{ token }}">
     <img class="helper-tool-img img-fluid" alt="" />
     <img class="reticle" src="{% static 'image_versions/img/focuspoint-target.png' %}" alt="" />
     <img class="target-overlay img-fluid" alt="" />
