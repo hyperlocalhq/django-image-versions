@@ -37,6 +37,7 @@ def show_image_version(request):
 @csrf_exempt
 def focus_point_details(request):
     path = request.POST.get("path") or request.GET.get("path")
+    token = request.POST.get("token") or request.GET.get("token")
     data = {}
     errors = None
     if not path:
@@ -45,13 +46,17 @@ def focus_point_details(request):
     if "../" in path:
         data["errors"] = {"path": ["Such media path is not valid."]}
         return JsonResponse(data, status=400)
+    if not token:
+        data["errors"] = {"path": ["Token is not defined. You don't have permission to change the focus point."]}
+        return JsonResponse(data, status=400)
+    if token != create_token(request.user.username, path):
+        data["errors"] = {"path": ["Token is incorrect. You don't have permission to change the focus point."]}
+        return JsonResponse(data, status=400)
+
     focus_point = FocusPoint.objects.filter(path=path).first()
     if not focus_point:
         focus_point = FocusPoint(path=path)
     if request.method == "POST":
-        if not request.user.is_staff:
-            err = "You don't have permission to change focus points."
-            return HttpResponseForbidden(err)
         form = FocusPointForm(data=request.POST, instance=focus_point)
         if form.is_valid():
             focus_point = form.save()
@@ -114,5 +119,6 @@ def set_focus_point(request):
     context = {
         "path": orig_path,
         "goto_next": goto_next,
+        "token": token,
     }
     return render(request, "image_versions/set_focus_point.html", context)
