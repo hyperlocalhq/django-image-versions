@@ -9,6 +9,7 @@
   //This stores focusPoint's data-attribute values
   var focusPointAttr = {
     path: '',
+    token: '',
     x: 0,
     y: 0,
     w: 0,
@@ -25,11 +26,12 @@
     detailsUrl = $imagePreview.data('focus-point-details-url');
 
     focusPointAttr.path = $imagePreview.data('path');
+    focusPointAttr.token = $imagePreview.data('token');
 
     if (focusPointAttr.path) {
       var imageURL = window.settings.MEDIA_URL + focusPointAttr.path;
 
-      $.get(detailsUrl + '?path=' + focusPointAttr.path, function(data) {
+      $.get(detailsUrl + '?path=' + focusPointAttr.path + '&token=' + focusPointAttr.token, function(data) {
           focusPointAttr.x = parseFloat(data.result.x);
           focusPointAttr.y = parseFloat(data.result.y);
           //Set the default source image
@@ -71,6 +73,7 @@
   function printDataAttr() {
     console.log(
       focusPointAttr.path,
+      focusPointAttr.token,
       focusPointAttr.x.toFixed(2),
       focusPointAttr.y.toFixed(2),
       focusPointAttr.w,
@@ -110,6 +113,7 @@
   function updateFocusPoint() {
     $.post(detailsUrl, {
       'path': focusPointAttr.path,
+      'token': focusPointAttr.token,
       'x': focusPointAttr.x,
       'y': focusPointAttr.y
     }, function(data) {
