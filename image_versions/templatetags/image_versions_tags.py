@@ -99,3 +99,21 @@ def image_version_url(path_or_file_object, generator_id):
         image_version = ImageCacheFile(generator)
         return image_version.url
     return ""
+
+
+@register.filter
+def is_image(path_or_file_object):
+    """
+    Checks if a file is an image.
+    Assumes that the file exists in the default storage.
+
+    path_or_file_object is a file path relative to MEDIA_URL or a file object.
+    """
+    from PIL import Image, UnidentifiedImageError
+
+    django_file = to_django_file(path_or_file_object)
+    try:
+        Image.open(django_file)
+        return True
+    except (OSError, UnidentifiedImageError):
+        return False
