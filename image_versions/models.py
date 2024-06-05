@@ -5,7 +5,7 @@ from django.core.files.storage import default_storage
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 if "makemigrations" in sys.argv:
-    from django.utils.translation import ugettext_noop as _
+    from django.utils.translation import gettext_noop as _
 else:
     from django.utils.translation import gettext_lazy as _
 
