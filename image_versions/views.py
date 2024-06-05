@@ -9,7 +9,7 @@ from django.http import (
 )
 from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.core.files.storage import default_storage
 from django.shortcuts import render
 
