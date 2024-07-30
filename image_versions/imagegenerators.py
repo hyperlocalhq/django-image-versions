@@ -14,7 +14,7 @@ class ImageSpecBase(ImageSpec):
     @property
     def processors(self):
         anchor = (.5, .5)
-        path = self.source.name[len(default_storage.base_location) + 1 :]
+        path = self.source.name[len(str(settings.MEDIA_ROOT)) + 1 :]
         focus_point = FocusPoint.objects.filter(path=path).first()
         if focus_point:
             anchor = focus_point.get_imagekit_anchor()
