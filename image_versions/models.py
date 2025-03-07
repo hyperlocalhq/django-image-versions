@@ -10,7 +10,38 @@ else:
     from django.utils.translation import gettext_lazy as _
 
 
+class FocusPointQuerySet(models.QuerySet):
+    def _modify_kwargs(self, kwargs):
+        import hashlib
+
+        if "path" in kwargs:
+            path = kwargs.pop("path") or ""
+            hash_object = hashlib.sha256(path.encode("utf-8"))
+            kwargs["file_path_hash"] = hash_object.hexdigest()
+
+    def filter(self, *args, **kwargs):
+        self._modify_kwargs(kwargs)
+        return super().filter(*args, **kwargs)
+
+    def exclude(self, *args, **kwargs):
+        self._modify_kwargs(kwargs)
+        return super().exclude(*args, **kwargs)
+
+    def get(self, *args, **kwargs):
+        self._modify_kwargs(kwargs)
+        return super().get(*args, **kwargs)
+
+
 class FocusPointManager(models.Manager):
+    def get_queryset(self):
+        return FocusPointQuerySet(
+            self.model, using=self._db
+        )  # Important!
+
+    def update_all_hashes(self):
+        for obj in self.all():
+            obj.save()
+
     def copy_focus_point(self, path_source, path_target, transfer=False):
         focus_point_source = self.filter(path=path_source).first()
         if focus_point_source:
@@ -45,6 +76,12 @@ class FocusPoint(models.Model):
         unique=True,
         db_index=True,
     )
+    file_path_hash = models.CharField(
+        max_length=64,
+        db_index=True,
+        blank=True,
+        editable=False,
+    )
     x = models.FloatField(
         "X",
         help_text="From -1.0 (left) to 1.0 (right)",
@@ -71,6 +108,21 @@ class FocusPoint(models.Model):
 
     def __str__(self):
         return self.path
+
+    def save(self, *args, **kwargs):
+        self.set_file_path_hash()
+        super().save(*args, **kwargs)
+
+    def set_file_path_hash(self):
+        import hashlib
+
+        file_path_hash = ""
+        if self.path:
+            file_path = self.path
+            hash_object = hashlib.sha256(file_path.encode("utf-8"))
+            file_path_hash = hash_object.hexdigest()
+
+        self.file_path_hash = file_path_hash
 
     def image_exists(self):
         return default_storage.exists(self.path)
